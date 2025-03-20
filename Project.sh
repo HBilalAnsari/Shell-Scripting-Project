@@ -188,16 +188,16 @@ multiplayer_mode() {
         display_ascii_shape "$shape"
 
         # Player 1's turn
-        echo -e "\n$player1's turn ($timer seconds):"
-        read -t $timer -p "> " guess1
+        echo -e "\n$player1's turn ($Timer seconds):"
+        read -t $Timer -p "> " guess1
         if [[ $? -ne 0 ]]; then
             echo -e "\nTime's up!"
             guess1=""
         fi
 
         # Player 2's turn
-        echo -e "\n$player2's turn ($timer seconds):"
-        read -t $timer -p "> " guess2
+        echo -e "\n$player2's turn ($Timer seconds):"
+        read -t $Timer -p "> " guess2
         if [[ $? -ne 0 ]]; then
             echo -e "\nTime's up!"
             guess2=""
@@ -234,7 +234,7 @@ multiplayer_mode() {
 # Description: Append the player's score to the leaderboard file.
 # =============================================================================
 update_leaderboard() {
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - $player_name: Score $player_score" >> "$leaderboard_file"
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $player_name: Score $Player_Score" >> "$Leaderboard_File"
     echo "Score saved to leaderboard."
 }
 
@@ -245,8 +245,8 @@ main_menu() {
     while true; do
 	cat<<Printing
     	"================================================="
-	"||      Welcome to the Dalgona Challenge       ||"
-	"||        1. Single Player Mode                ||"
+    	"|| **** Welcome to the Dalgona Challenge ****  ||"
+	    "||        1. Single Player Mode                ||"
         "||        2. VS Computer Mode                  ||"
         "||        3. Multiplayer Mode                  ||"
         "||        4. View Leaderboard                  ||"
@@ -254,12 +254,11 @@ main_menu() {
         "================================================="
 Printing
         read -p "   -=> Your Choice : " choice
-
         case $choice in
             1) single_player_mode ;;
             2) vs_computer_mode ;;
             3) multiplayer_mode ;;
-            4) [[ -f "$leaderboard_file" ]] && cat "$leaderboard_file" || echo "No scores yet." ;;
+            4) [[ -f "$Leaderboard_File" ]] && cat "$Leaderboard_File" || echo "No scores yet." ;;
             5) update_leaderboard
                echo "Goodbye !"
                exit 0 ;;
@@ -268,7 +267,6 @@ Printing
     done
 }
 # Start the Game
-
 display_with_delay "$Introduction" 0.05
 select_difficulty
 main_menu
