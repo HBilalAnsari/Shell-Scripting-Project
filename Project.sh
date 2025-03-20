@@ -7,7 +7,7 @@ Leaderboard_File="leaderboard.txt"
 Timer=8  # Default for Easy mode game
 
 # ASCII Art Definitions
-declare -A ascii_art=
+declare -A ASCII_ART=
 (
     ["Circle"]="
         o  o              
@@ -64,7 +64,8 @@ display_with_delay() {
 # Function: select_difficulty()
 # Description: Let the user choose the game difficulty (timer).
 # =============================================================================
-select_difficulty() {
+select_difficulty()
+{
 	cat<<MNR
 	================================
 	#   Choose Difficulty Level    #
@@ -76,9 +77,9 @@ select_difficulty() {
 MNR
 	read -p "-=> Your Choice : " choice
     case $choice in
-        1) timer=8 ;;
-        2) timer=6 ;;
-        3) timer=4 ;;
+        1) Timer=8 ;;
+        2) Timer=6 ;;
+        3) Timer=4 ;;
         *) echo "Invalid choice. Defaulting to Easy." ;;
     esac
 }
@@ -90,7 +91,7 @@ MNR
 # =============================================================================
 display_ascii_shape() {
     echo "Here is your challenge shape:"
-    echo "${ascii_art[$1]}"
+    echo "${ASCII_ART[$1]}"
 }
 
 # =============================================================================
@@ -123,7 +124,7 @@ single_player_mode() {
         fi
         if [[ "${guess,,}" == "${shape,,}" ]]; then
             echo "Correct! You earned 10 points."
-            player_score=$((player_score + 10))
+            Player_Score=$((Player_Score + 10))
             guessed=1
         else
             echo "Wrong guess!"
@@ -146,36 +147,36 @@ vs_computer_mode() {
     display_ascii_shape "$shape"
 
     # Player's turn
-    echo -e "\n$player_name's turn ($timer seconds):"
-    read -t $timer -p "> " player_guess
+    echo -e "\n$player_name's turn ($Timer seconds):"
+    read -t $Timer -p "> " player_guess
     if [[ $? -ne 0 ]]; then
         echo -e "\nTime's up!"
         player_guess=""
     fi
     if [[ "${player_guess,,}" == "${shape,,}" ]]; then
         echo "Correct! $player_name earns 10 points."
-        player_score=$((player_score + 10))
+        Player_Score=$((Player_Score + 10))
     else
         echo "Incorrect guess."
     fi
 
     # Computer's turn
     local computer_guess=${shapes[$((RANDOM % 4))]}
-    echo -e "\nComputer guesses: $computer_guess"
+    echo -e "\nComputer guess : $computer_guess"
     if [[ "$computer_guess" == "$shape" ]]; then
         echo "Computer earns 10 points."
-        computer_score=$((computer_score + 10))
+        Computer_Score=$((Computer_Score + 10))
     else
-        echo "Computer failed."
+        echo "Computer failed !"
     fi
 
-    echo -e "\nCorrect answer: $shape"
+    echo -e "\nCorrect Answer : $shape"
 }
 
 # Function : multiplayer_mode() & working : Multiplayer mode with two players and dynamic timer.
 multiplayer_mode() {
-    read -p "Enter Player 1's name: " player1
-    read -p "Enter Player 2's name: " player2
+    read -p "Enter Player 1's name : " player1
+    read -p "Enter Player 2's name : " player2
     local p1_score=0
     local p2_score=0
     local round=1
