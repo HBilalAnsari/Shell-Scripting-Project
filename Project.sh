@@ -229,6 +229,6 @@ Printing
     done
 }
 # Start the Game
-Display_Introduction "$Introduction" 0.7
+Display_Introduction "$Introduction" 0.02
 SelectDifficulty
 MainMenu
