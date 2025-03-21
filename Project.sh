@@ -1,13 +1,15 @@
 #!/bin/bash
-
 # Global Variables for managing game
+declare -a shapes=("Circle" "Star" "Umbrella" "Triangle")
 Player_Score=0
 Computer_Score=0
 Leaderboard_File="leaderboard.txt"
 Timer=8  # Default for Easy mode game
 
 # ASCII Art Definitions
-circle="
+declare -A ASCII_ART=
+(
+    ["Circle"]="
         o  o              
      o        o
     o          o
@@ -15,15 +17,13 @@ circle="
      o        o
         o  o
 "
-
-star="
+    ["Star"]="
      __/\__
      \    /
      /_  _\ 
        \/
 "
-
-umbrella="
+    ["Umbrella"]="
         _/\_
       _/    \_
     _/        \_
@@ -33,15 +33,14 @@ umbrella="
          |
        |_|
 "
-
-triangle="
+    ["Triangle"]="
         *
        * *
       *   *
      *     *
     *********
 "
-
+)
 # Introduction text
 Introduction='
 ||============================================================================================||
@@ -65,17 +64,18 @@ display_with_delay() {
 # Function: select_difficulty()
 # Description: Let the user choose the game difficulty (timer).
 # =============================================================================
-select_difficulty() {
-    cat <<EOF
-    ================================
-    #   Choose Difficulty Level    #
-    ================================
-    ||     1. Easy (8 sec.)       ||
-    ||     2. Medium (6 sec.)     ||
-    ||     3. Hard (4 sec.)       ||
-    ================================
-EOF
-    read -p "-=> Your Choice : " choice
+select_difficulty()
+{
+	cat<<MNR
+	================================
+	#   Choose Difficulty Level    #
+	================================
+	||     1. Easy (8 sec.)       ||
+	||     2. Medium (6 sec.)     ||
+	||     3. Hard (4 sec.)       ||
+	================================
+MNR
+	read -p "-=> Your Choice : " choice
     case $choice in
         1) Timer=8 ;;
         2) Timer=6 ;;
@@ -90,15 +90,8 @@ EOF
 # Parameters: $1 - Shape name
 # =============================================================================
 display_ascii_shape() {
-    local shape=$1
     echo "Here is your challenge shape:"
-    case $shape in
-        "Circle") echo "$circle" ;;
-        "Star") echo "$star" ;;
-        "Umbrella") echo "$umbrella" ;;
-        "Triangle") echo "$triangle" ;;
-        *) echo "Shape not found!" ;;
-    esac
+    echo "${ASCII_ART[$1]}"
 }
 
 # =============================================================================
@@ -107,7 +100,6 @@ display_ascii_shape() {
 # Returns: A shape name as a string.
 # =============================================================================
 select_random_shape() {
-    local shapes=("Circle" "Star" "Umbrella" "Triangle")
     local index=$((RANDOM % 4))
     echo "${shapes[$index]}"
 }
@@ -125,7 +117,7 @@ single_player_mode() {
 
     while [[ $attempts -gt 0 && $guessed -eq 0 ]]; do
         echo -e "\n$player_name, enter the shape name (Attempts left: $attempts):"
-        read -t $Timer -p "> " guess
+        read -t $timer -p "> " guess
         if [[ $? -ne 0 ]]; then
             echo -e "\nTime's up!"
             break
@@ -169,7 +161,7 @@ vs_computer_mode() {
     fi
 
     # Computer's turn
-    local computer_guess=$(select_random_shape)
+    local computer_guess=${shapes[$((RANDOM % 4))]}
     echo -e "\nComputer guess : $computer_guess"
     if [[ "$computer_guess" == "$shape" ]]; then
         echo "Computer earns 10 points."
@@ -181,10 +173,7 @@ vs_computer_mode() {
     echo -e "\nCorrect Answer : $shape"
 }
 
-# =============================================================================
-# Function: multiplayer_mode()
-# Description: Multiplayer mode with two players and dynamic timer.
-# =============================================================================
+# Function : multiplayer_mode() & working : Multiplayer mode with two players and dynamic timer.
 multiplayer_mode() {
     read -p "Enter Player 1's name : " player1
     read -p "Enter Player 2's name : " player2
@@ -250,21 +239,20 @@ update_leaderboard() {
 }
 
 # =============================================================================
-# Function: main_menu()
-# Description: Display the main menu and handle user input.
+# Function: main_menu (), & Display the main menu and handle user input.
 # =============================================================================
 main_menu() {
     while true; do
-        cat <<EOF
-=================================================
-|| **** Welcome to the Dalgona Challenge ****  ||
-||        1. Single Player Mode                ||
-||        2. VS Computer Mode                  ||
-||        3. Multiplayer Mode                  ||
-||        4. View Leaderboard                  ||
-||        5. Exit                              ||
-=================================================
-EOF
+	cat<<Printing
+    	"================================================="
+    	"|| **** Welcome to the Dalgona Challenge ****  ||"
+	    "||        1. Single Player Mode                ||"
+        "||        2. VS Computer Mode                  ||"
+        "||        3. Multiplayer Mode                  ||"
+        "||        4. View Leaderboard                  ||"
+        "||        5. Exit                              ||"
+        "================================================="
+Printing
         read -p "   -=> Your Choice : " choice
         case $choice in
             1) single_player_mode ;;
@@ -278,7 +266,6 @@ EOF
         esac
     done
 }
-
 # Start the Game
 display_with_delay "$Introduction" 0.05
 select_difficulty
