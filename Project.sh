@@ -265,7 +265,7 @@ main_menu() {
 ||        5. Exit                              ||
 =================================================
 EOF
-        read -p "   -=> Your Choice : " choice
+        read -p "   -=> Your Choice : " choices
         case $choice in
             1) single_player_mode ;;
             2) vs_computer_mode ;;
