@@ -59,13 +59,13 @@ Display_Introduction()
 SelectDifficulty()
 {
     cat<<MNR
-    ================================
-    #   Choose Difficulty Level    #
-    ================================
-    ||     1. Easy (8 sec.)       ||
-    ||     2. Medium (6 sec.)     ||
-    ||     3. Hard (4 sec.)       ||
-    ================================
+                    ================================
+                    #   Choose Difficulty Level    #
+                    ================================
+                    ||     1. Easy (8 sec.)       ||
+                    ||     2. Medium (6 sec.)     ||
+                    ||     3. Hard (4 sec.)       ||
+                    ================================
 MNR
     read -p "-=> Your Choice : " choice
     case $choice in
