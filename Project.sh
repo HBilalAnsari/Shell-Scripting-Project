@@ -206,14 +206,14 @@ MainMenu()
 {
     while true; do
         cat<<Printing
-        "================================================="
-        "|| **** Welcome to the Dalgona Challenge ****  ||"
-        "||        1. Single Player Mode                ||"
-        "||        2. VS Computer Mode                  ||"
-        "||        3. Multiplayer Mode                  ||"
-        "||        4. View Leaderboard                  ||"
-        "||        5. Exit                              ||"
-        "================================================="
+        =================================================
+        || **** Welcome to the Dalgona Challenge ****  ||
+        ||        1. Single Player Mode                ||
+        ||        2. VS Computer Mode                  ||
+        ||        3. Multiplayer Mode                  ||
+        ||        4. View Leaderboard                  ||
+        ||        5. Exit                              ||
+        =================================================
 Printing
         read -p "   -=> Your Choice : " choice
         case $choice in
