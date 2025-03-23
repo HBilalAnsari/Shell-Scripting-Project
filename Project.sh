@@ -155,7 +155,7 @@ ComputerVS_Mode()
     echo -e "\nCorrect Answer : $shape"
 
     # Save scores to leaderboard
-    UpdatedBoard "VS Computer" "$PlayerName" "$Player_Score" "$Computer_Score"
+    UpdatedBoard "VS Computer" "$PlayerName" "$Player_Score" "" "" "$Computer_Score"
 }
 
 # Function : MultiplayerMode & two players play
@@ -267,7 +267,7 @@ Printing
         esac
     done
 }
-
+# cd /c/Users/User/Desktop/Coding
 # Start the Game
 Display_Introduction "$Introduction" 0.001
 SelectDifficulty
