@@ -7,8 +7,8 @@ LeaderBoardFile="leaderboard.txt"
 Introduction='
 ||============================================================================================||
 ||                           Dalgona Challenge - Shell Script Game                            ||
-||                             Group Members: 23F-3074, 23F-3033                              ||
-||       Features: Single Player, VS Computer, Multiplayer, Difficulty Levels, Leaderboard    ||
+||                 Group Members : Ahad Khan (23F-3074), Bilal Ansari (23F-3033)              ||
+||       Features : Single Player, VS Computer, Multiplayer, Difficulty Levels, Leaderboard   ||
 ||============================================================================================||'
 Timer=8  # Default for Easy mode game
 
@@ -45,6 +45,7 @@ ASCII_ART[Triangle]='
      *     *
     *********
 '
+
 Display_Introduction()
 {
     local text=$1
@@ -55,6 +56,7 @@ Display_Introduction()
     done
     echo
 }
+
 # Function: SelectDifficulty & user able to choose the game difficulty (timer)
 SelectDifficulty()
 {
@@ -72,25 +74,28 @@ MNR
         1) Timer=8 ;;
         2) Timer=6 ;;
         3) Timer=4 ;;
-        *) echo "Invalid choice. Defaulting to Easy !" ;;
+        *) echo "Invalid choice, defaulting to Easy !" ;;
     esac
 }
+
 # Function : PrintingASCII_Shape &it display ASCII art for a given shape.
 PrintingASCII_Shape()
 {
     echo "Here is your challenge shape : "
     echo "${ASCII_ART[$1]}"
 }
+
 # Function : SelectRandomShape & randomly select a shape from the predefined list
 SelectRandomShape()
 {
     local index=$((RANDOM % 4))
     echo "${Shapes[$index]}"
 }
+
 # Function: SinglePlayerMode & user play with dynamic timer and attempts.
 SinglePlayerMode()
 {
-    read -p "Enter your Name : " PlayerName
+    read -p "Enter Your Name : " PlayerName
     local shape=$(SelectRandomShape)
     PrintingASCII_Shape "$shape"
     local attempts=3
@@ -114,11 +119,15 @@ SinglePlayerMode()
     if [[ $guessed -eq 0 ]]; then
         echo -e "\nThe Correct Answer is : $shape"
     fi
+
+    # Save score to leaderboard
+    UpdatedBoard "Single Player" "$PlayerName" "$Player_Score"
 }
+
 # Function: ComputerVS_Mode & Player play game with Computer with dynamic timer
 ComputerVS_Mode()
 {
-    read -p "Enter your name : " PlayerName
+    read -p "Enter Your Name : " PlayerName
     local shape=$(SelectRandomShape)
     PrintingASCII_Shape "$shape"
     # Player's turn
@@ -144,7 +153,11 @@ ComputerVS_Mode()
         echo "Computer failed !"
     fi
     echo -e "\nCorrect Answer : $shape"
+
+    # Save scores to leaderboard
+    UpdatedBoard "VS Computer" "$PlayerName" "$Player_Score" "$Computer_Score"
 }
+
 # Function : MultiplayerMode & two players play
 MultiplayerMode()
 {
@@ -186,21 +199,45 @@ MultiplayerMode()
         else
             echo "$Player2Name's guess was incorrect !"
         fi
-        echo -e "\nCorrect answer: $shape"
-        echo "Scores: $Player1Name: $Player1Score | $Player2Name: $Player2Score"
+        echo -e "\nCorrect answer : $shape"
+        echo "Scores : $Player1Name -=> $Player1Score & $Player2Name -=> $Player2Score !"
         read -p "Play another Round ? (y/n) : " PlayAgain
         Round=$((Round + 1))
     done
     echo -e "\n  *** Final Scores ***   "
     echo "$Player1Name: $Player1Score"
     echo "$Player2Name: $Player2Score"
+
+    # Save scores to leaderboard
+    UpdatedBoard "Multiplayer" "$Player1Name" "$Player1Score" "$Player2Name" "$Player2Score"
 }
+
 # Function: UpdatedBoard & append the player's score to the leaderboard file.
 UpdatedBoard()
 {
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - $PlayerName : Score $Player_Score" >> "$LeaderBoardFile"
+    local ModeType=$1
+    local PlayerName=$2
+    local PlayerScore=$3
+    local Player2Name=$4
+    local Player2Score=$5
+    local ComputerScore=$6
+
+    echo "=================================================" >> "$LeaderBoardFile"
+    echo "Mode : $ModeType" >> "$LeaderBoardFile"
+    if [[ "$ModeType" == "Multiplayer" ]]; then
+        echo "Player Name : $PlayerName & Score : $PlayerScore" >> "$LeaderBoardFile"
+        echo "Player Name : $Player2Name & Score : $Player2Score" >> "$LeaderBoardFile"
+    elif [[ "$ModeType" == "VS Computer" ]]; then
+        echo "Player Name : $PlayerName & Score : $PlayerScore" >> "$LeaderBoardFile"
+        echo "Computer Score : $ComputerScore" >> "$LeaderBoardFile"
+    else
+        echo "Player Name : $PlayerName & Score : $PlayerScore" >> "$LeaderBoardFile"
+    fi
+    echo "Date : $(date '+%Y-%m-%d %H:%M:%S')" >> "$LeaderBoardFile"
+    echo "=================================================" >> "$LeaderBoardFile"
     echo "Score saved to leaderboard !"
 }
+
 # Function: MainMenu , & Display the main menu and handle user input.
 MainMenu()
 {
@@ -208,28 +245,30 @@ MainMenu()
         cat<<Printing
         =================================================
         || **** Welcome to the Dalgona Challenge ****  ||
-        ||        1. Single Player Mode                ||
-        ||        2. VS Computer Mode                  ||
-        ||        3. Multiplayer Mode                  ||
-        ||        4. View Leaderboard                  ||
-        ||        5. Exit                              ||
+        ||        1. Change Difficulty Level           ||
+        ||        2. Single Player Mode                ||
+        ||        3. VS Computer Mode                  ||
+        ||        4. Multiplayer Mode                  ||
+        ||        5. View Leaderboard                  ||
+        ||        6. Exit                              ||
         =================================================
 Printing
         read -p "   -=> Your Choice : " choice
         case $choice in
-            1) SinglePlayerMode ;;
-            2) ComputerVS_Mode ;;
-            3) MultiplayerMode ;;
-            4) [[ -f "$LeaderBoardFile" ]] && cat "$LeaderBoardFile" || echo "No scores yet !" ;;
-            5) UpdatedBoard
-               echo "Goodbye !"
+            1) SelectDifficulty ;;
+            2) SinglePlayerMode ;;
+            3) ComputerVS_Mode ;;
+            4) MultiplayerMode ;;
+            5) [[ -f "$LeaderBoardFile" ]] && cat "$LeaderBoardFile" || echo "No scores yet !" ;;
+            6) echo "Good Bye !"
                echo "See You next Time !"
                exit 0 ;;
             *) echo "Invalid option !" ;;
         esac
     done
 }
+
 # Start the Game
-Display_Introduction "$Introduction" 0.02
+Display_Introduction "$Introduction" 0.001
 SelectDifficulty
 MainMenu
