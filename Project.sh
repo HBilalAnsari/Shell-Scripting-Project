@@ -122,6 +122,7 @@ SinglePlayerMode()
 
     # Save score to leaderboard
     UpdatedBoard "Single Player" "$PlayerName" "$Player_Score"
+    Player_Score=0
 }
 
 # Function: ComputerVS_Mode & Player play game with Computer with dynamic timer
@@ -156,6 +157,7 @@ ComputerVS_Mode()
 
     # Save scores to leaderboard
     UpdatedBoard "VS Computer" "$PlayerName" "$Player_Score" "" "" "$Computer_Score"
+    Player_Score=0
 }
 
 # Function : MultiplayerMode & two players play
